@@ -420,19 +420,21 @@
 	description = "A chemical compound that, when inhaled, vastly increases the user's reflexes and slows their perception of time. Carries a risk of addiction and extreme nausea and toxin damage if overdosed."
 	reagent_state = LIQUID
 	color = "#FAFAFA"
-	overdose_threshold = 20
-	addiction_threshold = 4
+	overdose_threshold = 15
+	addiction_threshold = 5
 	metabolization_rate = 2 * REAGENTS_METABOLISM
 
 /datum/reagent/drug/turbo/on_mob_add(mob/M)
 	..()
 	if(isliving(M))
 		var/mob/living/L = M
+		L.add_trait(TRAIT_GOTTAGOFAST, id)
 		L.add_trait(TRAIT_IGNORESLOWDOWN, id)
 
 /datum/reagent/drug/turbo/on_mob_delete(mob/M)
 	if(isliving(M))
 		var/mob/living/L = M
+		L.remove_trait(TRAIT_GOTTAGOFAST, id)
 		L.remove_trait(TRAIT_IGNORESLOWDOWN, id)
 	..()
 
@@ -461,7 +463,7 @@
 
 /datum/reagent/drug/turbo/addiction_act_stage1(mob/living/M)
 	M.Jitter(5)
-	M.adjustStaminaLoss(10)
+	M.adjustStaminaLoss(5)
 	if(prob(20))
 		M.emote(pick("twitch","drool","moan"))
 	..()
@@ -469,8 +471,7 @@
 /datum/reagent/drug/turbo/addiction_act_stage2(mob/living/M)
 	M.Jitter(10)
 	M.Dizzy(10)
-	M.adjustStaminaLoss(20)
-	M.losebreath += 5
+	M.adjustStaminaLoss(10)
 	if(prob(30))
 		M.emote(pick("twitch","drool","moan"))
 	..()
@@ -481,10 +482,7 @@
 			step(M, pick(GLOB.cardinals))
 	M.Jitter(15)
 	M.Dizzy(15)
-	M.blur_eyes(30)
-	M.adjustStaminaLoss(30)
-	M.losebreath += 10
-	M.adjustToxLoss(2, 0)
+	M.adjustStaminaLoss(15)
 	if(prob(40))
 		M.emote(pick("twitch","drool","moan"))
 	..()
@@ -495,10 +493,7 @@
 			step(M, pick(GLOB.cardinals))
 	M.Jitter(20)
 	M.Dizzy(20)
-	M.adjustStaminaLoss(40)
-	M.vomit(30, 1, 1, 5, 0, 0, 0, 1)
-	M.Unconscious(200)
-	M.Jitter(1000)
+	M.adjustStaminaLoss(30)
 	M.adjustToxLoss(6, 0)
 	if(prob(50))
 		M.emote(pick("twitch","drool","moan"))
